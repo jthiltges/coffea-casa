@@ -132,6 +132,7 @@ if [[ ! -v COFFEA_CASA_SIDECAR ]]; then
       MEMORY_MB_FORMATTED=$MEMORY".00MB"
       # Requirement: to add to Condor job decription "+DaskSchedulerAddress": '"tcp://129.93.183.34:8787"',
       EXTERNALIP_PORT=`cat $_CONDOR_JOB_AD | grep DaskSchedulerAddress | tr -d '"' | awk '{print $NF;}'`
+      WORKER_LIFETIME=${WORKER_LIFETIME:-1 hour}
 
       echo "Print ClassAd:" 1>&2
       cat $_CONDOR_JOB_AD 1>&2
@@ -148,6 +149,7 @@ if [[ ! -v COFFEA_CASA_SIDECAR ]]; then
       --memory-limit $MEMORY_MB_FORMATTED \
       --nanny \
       --death-timeout 60 \
+      --lifetime $WORKER_LIFETIME \
       --protocol tls \
       --listen-address tls://0.0.0.0:$CONTAINER_PORT \
       --contact-address tls://$HOST:$PORT"
